@@ -3,16 +3,15 @@
 print("--------- 程序清单 3-1----------")
 import os
 import sys
-# os.chdir(os.path.expanduser("~") + "/book/ch03")
-os.chdir("C:/Users/verazuo/Desktop/白帽教程整理/安全数据分析/数据驱动安全/书中的代码/book/ch03")
+
+os.chdir(os.path.expanduser("~") + "/Desktop/白帽教程整理/安全数据分析/数据驱动安全/Code For Data-driven Security/book/ch03")
 
 # 程序清单 3-3
 print("--------# 程序清单 3-3--------")
 # URL for the AlienVault IP Reputation Database (OSSIM format)
-# storing the URL in a variable makes it easier to modify later
-# if it changes. NOTE: we are using a specific version of the data
-# in these examples, so we are pulling it from an alternate 
-# book-specific location.
+# storing the URL in a variable makes it easier to modify later将URL存入一个变量中，让它在之后更好被修改
+# if it changes. NOTE: we are using a specific version of the data in these examples, 如果被修改了，就提示：我们在例子中使用一个这个数据的特殊版本
+# so we are pulling it from an alternate book-specific location.
 
 import urllib
 import os.path
@@ -23,23 +22,24 @@ avURL = "http://datadrivensecurity.info/book/ch03/data/reputation.data"
 avRep = "data/reputation.data"
 
 # using an if-wrapped test with urllib.urlretrieve() vs direct read
-# via panads avoids having to re-download a 16MB file every time we
-# run the script
+# 通过pandas来避免每次我们跑这个脚本都要重新下载一个16MB的文件
 if not os.path.isfile(avRep):
     urllib.urlretrieve(avURL, filename=avRep)
 
 # 程序清单 3-5
-print("--------# 程序清单 3-5--------")
+print("--------  # 程序清单 3-5   读入数据  --------")
 
 import pandas as pd
-# read in the data into a pandas data frame
+
+# 将数据读入一个 pandas data frame
 av = pd.read_csv(avRep, sep="#", header=None)
 
-# make smarter column names
-av.columns = ["IP","Reliability","Risk","Type","Country",
-              "Locale","Coords","x"]
+# 换上一个更棒的列表名
+av.columns = ["IP", "Reliability", "Risk", "Type", "Country",
+              "Locale", "Coords", "x"]
 
-print(av) # take a quick look at the data structure
+# print(av)  # 查看一下数据结构
+
 ## <class 'pandas.core.frame.DataFrame'>
 ## Int64Index: 258626 entries, 0 to 258625
 ## Data columns (total 8 columns):
@@ -53,7 +53,7 @@ print(av) # take a quick look at the data structure
 ## x              258626  non-null values
 ## dtypes: int64(2), object(6)
 
-# take a look at the first 5 rows
+# 查看一下前五行
 av.head().to_csv(sys.stdout)
 ## ,IP,Reliability,Risk,Type,Country,Locale,Coords,x
 ## 0,222.76.212.189,4,2,Scanning Host,CN,Xiamen,"24.4797992706,
@@ -67,16 +67,18 @@ av.head().to_csv(sys.stdout)
 ## 36.0507011414",11
 
 # Listing 3-6
-print("--------# 程序清单 3-6--------")
-# require object: av (3-5)
+print("--------# 程序清单 3-6  用HTML的格式显示数据 --------")
+# 要求3-5中的 av
 # See corresponding output in Figure 3-1
 # import the capability to display Python objects as formatted HTML
-from IPython.display import HTML 
-# display the first 10 lines of the dataframe as formatted HTML
+from IPython.display import HTML
+
+# 显示数据框架中的前10行 display the first 10 lines of the dataframe as formatted HTML
+# 要用canopy显示，但是一直下载不下来，脑壳痛
 HTML(av.head(10).to_html())
 
 # Listing 3-8
-print("--------# 程序清单 3-8--------")
+print("--------# 程序清单 3-8 用describe()统计数据--------")
 
 # require object: av (3-5)
 av['Reliability'].describe()
@@ -89,7 +91,6 @@ av['Reliability'].describe()
 ## 75%           4.000000
 ## max          10.000000
 ## Length: 8, dtype: float64
-
 av['Risk'].describe()
 ## count    258626.000000
 ## mean          2.221362
@@ -100,9 +101,10 @@ av['Risk'].describe()
 ## 75%           2.000000
 ## max           7.000000
 ## Length: 8, dtype: float64
+print(av.describe())
 
 # Listing 3-10
-print("--------# 程序清单 3-10--------")
+print("--------# 程序清单 3-10   分类数据--------")
 
 # require object: av (3-5)
 # factor_col(col)
@@ -110,16 +112,18 @@ print("--------# 程序清单 3-10--------")
 # helper function to mimic R's "summary()" function
 # for pandas "columns" (which are really just Python
 # arrays)
-#
+# 利用pandas将数据帧的列转换成一个命名恰当的categorical对象
 def factor_col(col):
     factor = pd.Categorical(col)
-    return pd.value_counts(factor,sort=True).reindex(factor.levels)
+    # value_counts 计算一个非空值的数的柱状图, sort=False不按照值大小排序展示
+    return pd.value_counts(factor, sort=False)
 
 rel_ct = pd.value_counts(av['Reliability'])
 risk_ct = pd.value_counts(av['Risk'])
 type_ct = pd.value_counts(av['Type'])
 country_ct = pd.value_counts(av['Country'])
 
+print("av['Reliability']")
 print(factor_col(av['Reliability']))
 ## 1       5612
 ## 2     149117
@@ -133,6 +137,7 @@ print(factor_col(av['Reliability']))
 ## 10       196
 ## Length: 10, dtype: int64
 
+print("av['Risk']")
 print(factor_col(av['Risk']))
 ## 1        39
 ## 2    213852
@@ -182,9 +187,9 @@ import matplotlib.pyplot as plt
 country_ct = pd.value_counts(av['Country'])
 
 # plot the data
-plt.axes(frameon=0) # reduce chart junk
-country_ct[:20].plot(kind='bar', 
-   rot=0, title="Summary By Country", figsize=(8,5)).grid(False)
+plt.axes(frameon=0)  # reduce chart junk
+country_ct[:20].plot(kind='bar',
+                     rot=0, title="Summary By Country", figsize=(8, 5)).grid(False)
 
 # Listing 3-15
 print("--------# 程序清单 3-15--------")
@@ -192,9 +197,9 @@ print("--------# 程序清单 3-15--------")
 # requires packages: matplotlib
 # require object: av (3-5), factor_col (3-10)
 # See corresponding output in Figure 3-6
-plt.axes(frameon=0) # reduce chart junk
+plt.axes(frameon=0)  # reduce chart junk
 factor_col(av['Reliability']).plot(kind='bar', rot=0,
-           title="Summary By 'Reliability'", figsize=(8,5)).grid(False)
+                                   title="Summary By 'Reliability'", figsize=(8, 5)).grid(False)
 
 # Listing 3-16
 print("--------# 程序清单 3-16--------")
@@ -202,17 +207,16 @@ print("--------# 程序清单 3-16--------")
 # requires packages: matplotlib
 # require object: av (3-5), factor_col (3-10)
 # See corresponding output in Figure 3-7
-plt.axes(frameon=0) # reduce chart junk
-factor_col(av['Risk']).plot(kind='bar', rot=0, 
-           title="Summary By 'Risk'", figsize=(8,5)).grid(False)
-
+plt.axes(frameon=0)  # reduce chart junk
+factor_col(av['Risk']).plot(kind='bar', rot=0,
+                            title="Summary By 'Risk'", figsize=(8, 5)).grid(False)
 
 # Listing 3-18
 print("--------# 程序清单 3-18--------")
 
 # require object: av (3-5)
 # extract the top 10 most prevalent countries
-top10 = pd.value_counts(av['Country'])[0:9] 
+top10 = pd.value_counts(av['Country'])[0:9]
 # calculate the % for each of the top 10
 top10.astype(float) / len(av['Country'])
 ## CN    0.265182
@@ -253,12 +257,11 @@ print(pd.crosstab(av['Risk'], av['Reliability']).to_string())
 
 # graphical view of contingency table (swapping risk/reliability)
 xtab = pd.crosstab(av['Reliability'], av['Risk'])
-plt.pcolor(xtab,cmap=cm.Greens)
-plt.yticks(arange(0.5,len(xtab.index), 1),xtab.index)
-plt.xticks(arange(0.5,len(xtab.columns), 1),xtab.columns)
+plt.pcolor(xtab, cmap=cm.Greens)
+plt.yticks(arange(0.5, len(xtab.index), 1), xtab.index)
+plt.xticks(arange(0.5, len(xtab.columns), 1), xtab.columns)
 plt.colorbar()
 title("Risk ~ Reliability")
-
 
 # Listing 3-23
 print("--------# 程序清单 3-23--------")
@@ -281,20 +284,18 @@ rsk = av['Risk']
 
 # compute crosstab making it split on the
 # new “type” column
-xtab = pd.crosstab(typ, [ rel, rsk ], 
-          rownames=['typ'], colnames=['rel', 'rsk'])
-
-
+xtab = pd.crosstab(typ, [rel, rsk],
+                   rownames=['typ'], colnames=['rel', 'rsk'])
 
 # the following print statement will show a huge text
 # representation of the contingency table. The output
 # is too large for the book, but is worth looking at 
 # as you run through the exercise to see how useful 
 # visualizations can be over raw text/numeric output
-print(xtab.to_string()) #output not shown
+print(xtab.to_string())  # output not shown
 
-xtab.plot(kind='bar',legend=False,
-   title="Risk ~ Reliabilty | Type").grid(False)
+xtab.plot(kind='bar', legend=False,
+          title="Risk ~ Reliabilty | Type").grid(False)
 
 # Listing 3-25
 print("--------# 程序清单 3-25--------")
@@ -306,29 +307,29 @@ rrt_df = av[av['newtype'] != "Scanning Host"]
 typ = rrt_df['newtype']
 rel = rrt_df['Reliability']
 rsk = rrt_df['Risk']
-xtab = pd.crosstab(typ, [ rel, rsk ], 
-       rownames=['typ'], colnames=['rel', 'rsk'])
-xtab.plot(kind='bar',legend=False, 
-   title="Risk ~ Reliabilty | Type").grid(False)
+xtab = pd.crosstab(typ, [rel, rsk],
+                   rownames=['typ'], colnames=['rel', 'rsk'])
+xtab.plot(kind='bar', legend=False,
+          title="Risk ~ Reliabilty | Type").grid(False)
 
 # Listing 3-27
 print("--------# 程序清单 3-27--------")
 
 # require object: av (3-5), rrt_df (3-25)
 # See corresponding output in Figure 3-16
-rrt_df = rrt_df[rrt_df['newtype'] != "Malware distribution" ]
-rrt_df = rrt_df[rrt_df['newtype'] != "Malware Domain" ]
+rrt_df = rrt_df[rrt_df['newtype'] != "Malware distribution"]
+rrt_df = rrt_df[rrt_df['newtype'] != "Malware Domain"]
 typ = rrt_df['newtype']
 rel = rrt_df['Reliability']
 rsk = rrt_df['Risk']
-xtab = pd.crosstab(typ, [ rel, rsk ],
-        rownames=['typ'], colnames=['rel', 'rsk'])
+xtab = pd.crosstab(typ, [rel, rsk],
+                   rownames=['typ'], colnames=['rel', 'rsk'])
 
 print("Count: %d; Percent: %2.1f%%" % (len(rrt_df), (float(len(rrt_df))
-   / len(av)) * 100))
+                                                     / len(av)) * 100))
 ## Count: 15171; Percent: 5.9%
 
-xtab.plot(kind='bar',legend=False, 
-   title="Risk ~ Reliabilty | Type").grid(False)
+xtab.plot(kind='bar', legend=False,
+          title="Risk ~ Reliabilty | Type").grid(False)
 
 ## END OF CHAPTER 3 PYTHON CODE
