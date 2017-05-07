@@ -1,0 +1,10 @@
+# 忽略以下格式的文件
+*.json
+*.csv
+*.gif
+*.png
+*.jpg
+*.zip
+*.data
+*.mov
+**/data/*
