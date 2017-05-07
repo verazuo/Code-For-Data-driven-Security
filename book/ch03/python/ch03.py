@@ -67,7 +67,7 @@ av.head().to_csv(sys.stdout)
 ## 36.0507011414",11
 
 # Listing 3-6
-print("--------# 程序清单 3-6  用HTML的格式显示数据 --------")
+print("\n--------# 程序清单 3-6  用HTML的格式显示数据 --------")
 # 要求3-5中的 av
 # See corresponding output in Figure 3-1
 # import the capability to display Python objects as formatted HTML
@@ -78,7 +78,7 @@ from IPython.display import HTML
 HTML(av.head(10).to_html())
 
 # Listing 3-8
-print("--------# 程序清单 3-8 用describe()统计数据--------")
+print("\n--------# 程序清单 3-8 用describe()统计数据--------")
 
 # require object: av (3-5)
 av['Reliability'].describe()
@@ -123,7 +123,7 @@ risk_ct = pd.value_counts(av['Risk'])
 type_ct = pd.value_counts(av['Type'])
 country_ct = pd.value_counts(av['Country'])
 
-print("av['Reliability']")
+print("\n---av['Reliability']---")
 print(factor_col(av['Reliability']))
 ## 1       5612
 ## 2     149117
@@ -137,7 +137,7 @@ print(factor_col(av['Reliability']))
 ## 10       196
 ## Length: 10, dtype: int64
 
-print("av['Risk']")
+print("\n---av['Risk']---")
 print(factor_col(av['Risk']))
 ## 1        39
 ## 2    213852
@@ -148,6 +148,7 @@ print(factor_col(av['Risk']))
 ## 7        10
 ## Length: 7, dtype: int64
 
+print("\n----av['Type']前十个---")
 print(factor_col(av['Type']).head(n=10))
 ## APT;Malware Domain                  1
 ## C&C                               610
@@ -161,6 +162,7 @@ print(factor_col(av['Type']).head(n=10))
 ## Malware Domain                   9274
 ## Length: 10, dtype: int64
 
+print("\n----av['Country']前十个-----")
 print(factor_col(av['Country']).head(n=10))
 ## A1     267
 ## A2       2
@@ -174,8 +176,10 @@ print(factor_col(av['Country']).head(n=10))
 ## AU     155
 ## Length: 10, dtype: int64
 
+
+print("------------------3-14~3-16为以上数据的可视化显示---------------")
 # Listing 3-14
-print("--------# 程序清单 3-14--------")
+print("--------# 程序清单 3-14   为 3-5 的可视化展示--------")
 # require object: av (3-5)
 # See corresponding output in Figure 3-5
 # NOTE: Notice the significant differnce in the Python graph in that the 
@@ -192,17 +196,17 @@ country_ct[:20].plot(kind='bar',
                      rot=0, title="Summary By Country", figsize=(8, 5)).grid(False)
 
 # Listing 3-15
-print("--------# 程序清单 3-15--------")
+print("--------# 程序清单 3-15  图3-6的相应输出--------")
 
 # requires packages: matplotlib
 # require object: av (3-5), factor_col (3-10)
-# See corresponding output in Figure 3-6
-plt.axes(frameon=0)  # reduce chart junk
+# 查看 Figure 3-6的相应输出
+plt.axes(frameon=0)  # 减少图标垃圾
 factor_col(av['Reliability']).plot(kind='bar', rot=0,
                                    title="Summary By 'Reliability'", figsize=(8, 5)).grid(False)
 
 # Listing 3-16
-print("--------# 程序清单 3-16--------")
+print("--------# 程序清单 3-16   图3-7 的相应输出--------")
 
 # requires packages: matplotlib
 # require object: av (3-5), factor_col (3-10)
@@ -212,13 +216,13 @@ factor_col(av['Risk']).plot(kind='bar', rot=0,
                             title="Summary By 'Risk'", figsize=(8, 5)).grid(False)
 
 # Listing 3-18
-print("--------# 程序清单 3-18--------")
+print("\n--------# 程序清单 3-18  提取10个最流行的国家--------")
 
 # require object: av (3-5)
 # extract the top 10 most prevalent countries
 top10 = pd.value_counts(av['Country'])[0:9]
-# calculate the % for each of the top 10
-top10.astype(float) / len(av['Country'])
+# calculate the % for each of the top 10为前十名中的每一个计算比例
+print(top10.astype(float) / len(av['Country']))
 ## CN    0.265182
 ## US    0.194826
 ## TR    0.053970
@@ -232,7 +236,7 @@ top10.astype(float) / len(av['Country'])
 
 
 # Listing 3-20
-print("--------# 程序清单 3-20--------")
+print("\n--------# 程序清单 3-20--------")
 
 # require object: av (3-5)
 # compute contingency table for Risk/Reliability factors which 
@@ -261,7 +265,7 @@ plt.pcolor(xtab, cmap=cm.Greens)
 plt.yticks(arange(0.5, len(xtab.index), 1), xtab.index)
 plt.xticks(arange(0.5, len(xtab.columns), 1), xtab.columns)
 plt.colorbar()
-title("Risk ~ Reliability")
+plt.title("Risk ~ Reliability")
 
 # Listing 3-23
 print("--------# 程序清单 3-23--------")
