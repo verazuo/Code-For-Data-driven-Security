@@ -71,11 +71,12 @@ print("\n--------# 程序清单 3-6  用HTML的格式显示数据 --------")
 # 要求3-5中的 av
 # See corresponding output in Figure 3-1
 # import the capability to display Python objects as formatted HTML
-from IPython.display import HTML
+from IPython.display import HTML, display
 
 # 显示数据框架中的前10行 display the first 10 lines of the dataframe as formatted HTML
-# 要用canopy显示，但是一直下载不下来，脑壳痛
-HTML(av.head(10).to_html())
+# 使用HTML一直打印出来的都是 <IPython.core.display.HTML object>
+# HTML(av.head(10).to_html())
+print(av.head(10))
 
 # Listing 3-8
 print("\n--------# 程序清单 3-8 用describe()统计数据--------")
