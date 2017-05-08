@@ -124,8 +124,8 @@ risk_ct = pd.value_counts(av['Risk'])
 type_ct = pd.value_counts(av['Type'])
 country_ct = pd.value_counts(av['Country'])
 
-print("\n---av['Reliability']---")
-print(factor_col(av['Reliability']))
+# print("\n---av['Reliability']---")
+# print(factor_col(av['Reliability']))
 ## 1       5612
 ## 2     149117
 ## 3      10892
@@ -138,8 +138,8 @@ print(factor_col(av['Reliability']))
 ## 10       196
 ## Length: 10, dtype: int64
 
-print("\n---av['Risk']---")
-print(factor_col(av['Risk']))
+# print("\n---av['Risk']---")
+# print(factor_col(av['Risk']))
 ## 1        39
 ## 2    213852
 ## 3     33719
@@ -149,8 +149,8 @@ print(factor_col(av['Risk']))
 ## 7        10
 ## Length: 7, dtype: int64
 
-print("\n----av['Type']前十个---")
-print(factor_col(av['Type']).head(n=10))
+# print("\n----av['Type']前十个---")
+# print(factor_col(av['Type']).head(n=10))
 ## APT;Malware Domain                  1
 ## C&C                               610
 ## C&C;Malware Domain                 31
@@ -163,8 +163,8 @@ print(factor_col(av['Type']).head(n=10))
 ## Malware Domain                   9274
 ## Length: 10, dtype: int64
 
-print("\n----av['Country']前十个-----")
-print(factor_col(av['Country']).head(n=10))
+# print("\n----av['Country']前十个-----")
+# print(factor_col(av['Country']).head(n=10))
 ## A1     267
 ## A2       2
 ## AE    1827
@@ -180,7 +180,7 @@ print(factor_col(av['Country']).head(n=10))
 
 print("------------------3-14~3-16为以上数据的可视化显示---------------")
 # Listing 3-14
-print("--------# 程序清单 3-14   为 3-5 的可视化展示--------")
+print("--------# 程序清单 3-14   为 3-5 的可视化展示(需要单独在命令行跑代码)--------")
 # require object: av (3-5)
 # See corresponding output in Figure 3-5
 # NOTE: Notice the significant differnce in the Python graph in that the 
@@ -269,7 +269,7 @@ plt.colorbar()
 plt.title("Risk ~ Reliability")
 
 # Listing 3-23
-print("--------# 程序清单 3-23--------")
+print("--------# 程序清单 3-23 显示整个Risk和Reliabilty的关系--------")
 
 # require object: av (3-5)
 # See corresponding output in Figure 3-9
@@ -297,13 +297,14 @@ xtab = pd.crosstab(typ, [rel, rsk],
 # is too large for the book, but is worth looking at 
 # as you run through the exercise to see how useful 
 # visualizations can be over raw text/numeric output
-print(xtab.to_string())  # output not shown
+
+# print(xtab.to_string())  # output not shown
 
 xtab.plot(kind='bar', legend=False,
           title="Risk ~ Reliabilty | Type").grid(False)
 
 # Listing 3-25
-print("--------# 程序清单 3-25--------")
+print("--------# 程序清单 3-25 去掉显示最多的Scanning Host，避免他遮盖了其他数据（比例占得太大）--------")
 
 # require object: av (3-5)
 # See corresponding output in Figure 3-14
@@ -313,12 +314,16 @@ typ = rrt_df['newtype']
 rel = rrt_df['Reliability']
 rsk = rrt_df['Risk']
 xtab = pd.crosstab(typ, [rel, rsk],
-                   rownames=['typ'], colnames=['rel', 'rsk'])
+                   rownames=['type cv'], colnames=['rel', 'rsk'])
 xtab.plot(kind='bar', legend=False,
           title="Risk ~ Reliabilty | Type").grid(False)
 
+print("""根据这张图可以看出，Malware Doamin类的风险评级在2-3之间，
+可靠性集以2为中心向外蔓延。
+另外Malware distribution没有产生任何的风险，在程序清单3-27中我们可以移除它
+""")
 # Listing 3-27
-print("--------# 程序清单 3-27--------")
+print("--------# 程序清单 3-27 移除Malware distribution和Malware Domain--------")
 
 # require object: av (3-5), rrt_df (3-25)
 # See corresponding output in Figure 3-16
